@@ -1,3 +1,5 @@
+[![license](https://img.shields.io/github/license/exmanka/ksiVPN-ansible-pivpn-3xui?style=flat-square&color=green)](https://github.com/exmanka/ksiVPN-ansible-pivpn-3xui/blob/main/LICENSE)
+[![part-of-ksivpn](https://img.shields.io/badge/Part_of-ksiVPN_Project-limegreen?style=flat-square&logo=github&color=blue)](https://github.com/exmanka/ksiVPN-telegram-bot)
 # Ansible for switching PiVPN and 3X-UI configurations
 Fast multiple configurations switching (enable/disable) for PiVPN and 3X-UI.
 
