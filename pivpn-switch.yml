@@ -1,0 +1,31 @@
+- name: Enable or disable multiple configurations of client
+  hosts: all
+  gather_facts: false
+
+  vars:
+    # Unique part of the client's name (will be overwritten by ansible-playbook -e "client=" option)
+    client: KSIVA
+    # Desired pivpn client's configuration state [-on, -off] (will be overwritten by ansible-playbook -e "state=" option)
+    state: -off
+
+  tasks:
+    - name: Get PiVPN configurations list
+      ansible.builtin.command: pivpn -l
+      register: pivpn_configs_list
+      changed_when: false
+
+    - name: Get configurations of specified client
+      ansible.builtin.set_fact:
+        client_configs_list:
+          "{{ pivpn_configs_list.stdout | ansible.builtin.regex_findall('^[\\w@]*' + client + '[\\w@]*', multiline=True, ignorecase=True) }}"
+      when: pivpn_configs_list.stdout
+
+    - name: Change configuration state to desired one
+      ansible.builtin.command:
+        argv: "{{ ['pivpn', state, '-y'] + client_configs_list }}"
+      register: result
+      changed_when: result.stdout[-18:] == "WireGuard reloaded" # PiVPN always returns result.rc = 0, so check stdout info
+
+    - name: Print return information from the previous task
+      ansible.builtin.debug:
+        var: result.stdout_lines
